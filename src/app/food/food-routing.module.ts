@@ -1,19 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home.component';
-import { FoodComponent } from '../food/food.component';
+import { FoodComponent } from './food.component';
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: HomeComponent,
-    children: [
-      {
-        path: 'food',
-        component: FoodComponent,
-      },
-    ],
+    path: 'food',
+    component: FoodComponent,
   },
 ];
 
@@ -22,4 +15,4 @@ const routes: Routes = [
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class HomeRoutingModule {}
+export class FoodRoutingModule {}
