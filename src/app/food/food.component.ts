@@ -59,12 +59,9 @@ export class FoodComponent implements OnInit {
   proteinTotal = 0; // Initialize the value
 
   ngOnInit() {
-    console.log('ngOnitCalled');
-    // Calculate proteinTotal here
     const egg = new Ingredient(4, 'egg', 7, false);
     const pannedEggs = new Recipe('pannedEggs', [egg]);
     pannedEggs.calcNutritionalValues();
-    this.proteinTotal = 5; //pannedEggs.proteinTotal;
-    console.log('ngOnitFinished');
+    this.proteinTotal = pannedEggs.proteinTotal;
   }
 }
