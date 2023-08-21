@@ -6,16 +6,24 @@ enum Nutrients {
   vitaminB1,
 }
 
+enum Verarbeitungsschritte {
+  mischen = 1, //Quelle: Vitamin C bei https://www.zentrum-der-gesundheit.de/bibliothek/ratgeber/ernaehrungsratgeber/naehrstoffverluste  Vitamin B1 ( Thiamin), Vitamin B5 (Pantothensäure) und Vitamin C gehören
+  kochen,
+  daempfen,
+  duensten,
+  wiederErwaermen,
+}
+
 class Ingredient {
   name: string;
   countable: boolean; //Ei: true; Mehl: false-> dann beziehen sich die Nährstoffe auf 100g
   amount: number; //entweder Gramm oder Stück.
-  nutrients: Map<Nutrients, number>;
+  nutrients: { [key in Nutrients]: number };
 
   constructor(
     amount: number,
     name: string,
-    nutrients: Map<Nutrients, number>,
+    nutrients: { [key in Nutrients]: number },
     countable: boolean
   ) {
     this.amount = amount;
@@ -28,27 +36,49 @@ class Ingredient {
 class Recipe {
   name: string;
   ingredients: Ingredient[];
-  //hier gehören noch Arbeitsschritte dazu. Als Anleitung für den Nutzer und vllt. wegen Auswirkung auf Nährstoffe.
-  nutrients: Map<Nutrients, number>;
+  nutrients: { [key in Nutrients]: number };
 
   constructor(name: string, ingredients: Ingredient[]) {
     this.name = name;
     this.ingredients = ingredients;
-    this.nutrients = new Map<Nutrients, number>();
+    this.nutrients = {} as { [key in Nutrients]: number };
     for (const nut of Object.values(Nutrients) as Nutrients[]) {
-      this.nutrients.set(nut, 0);
+      this.nutrients[nut] = 0;
     }
   }
 
-  calcNutritionalValues(): void {
-    for (const ing of this.ingredients) {
-      for (const [nutrient, value] of ing.nutrients.entries()) {
-        this.nutrients.set(
-          nutrient,
-          (this.nutrients.get(nutrient) || 0) + value * ing.amount
-        );
-      }
+  calcNutritionalValues(process: Verarbeitungsschritte): void {
+    for (const ing of this.ingredients)
+      for (const nut in Nutrients)
+        if (isNaN(Number(nut))) {
+          const nutrientEnumValue: Nutrients = //einzige variante, durch enum-Container zu iterieren.
+            Nutrients[nut as keyof typeof Nutrients];
+          this.nutrients[nutrientEnumValue] +=
+            ing.nutrients[nutrientEnumValue] * ing.amount;
+        }
+
+    let degreasinVitamins: number;
+    switch (process) {
+      case Verarbeitungsschritte.daempfen:
+        degreasinVitamins = 0.3;
+        break;
+      case Verarbeitungsschritte.duensten:
+        degreasinVitamins = 0.25;
+        break;
+      case Verarbeitungsschritte.kochen:
+      case Verarbeitungsschritte.wiederErwaermen:
+        degreasinVitamins = 0.5;
+        break;
+      case Verarbeitungsschritte.mischen:
+      default:
+        degreasinVitamins = 0;
+        break;
     }
+
+    const heatInstableVitamins: Nutrients[] = [Nutrients.vitaminB1];
+
+    for (const nutrient of heatInstableVitamins)
+      this.nutrients[nutrient] *= degreasinVitamins;
   }
 }
 
@@ -62,14 +92,18 @@ export class FoodComponent implements OnInit {
   vitaminB1Total = 0;
 
   ngOnInit() {
-    //const egg = new Ingredient(4, 'egg', 7, 0.00006, false);
-    const eggNutrients = new Map<Nutrients, number>();
-    eggNutrients.set(Nutrients.protein, 7);
-    eggNutrients.set(Nutrients.vitaminB1, 0.0006);
-    const egg = new Ingredient(4, 'egg', eggNutrients, true);
+    const egg = new Ingredient(
+      4,
+      'egg',
+      {
+        [Nutrients.protein]: 7,
+        [Nutrients.vitaminB1]: 0.0006,
+      },
+      true
+    );
     const pannedEggs = new Recipe('pannedEggs', [egg]);
-    pannedEggs.calcNutritionalValues();
-    this.proteinTotal = pannedEggs.nutrients.get(Nutrients.protein) || 0;
-    this.vitaminB1Total = pannedEggs.nutrients.get(Nutrients.vitaminB1) || 0;
+    pannedEggs.calcNutritionalValues(Verarbeitungsschritte.kochen);
+    this.proteinTotal = pannedEggs.nutrients[Nutrients.protein] || 0;
+    this.vitaminB1Total = pannedEggs.nutrients[Nutrients.vitaminB1] || 0;
   }
 }
