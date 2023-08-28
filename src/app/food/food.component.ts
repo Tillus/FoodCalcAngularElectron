@@ -88,6 +88,8 @@ class Recipe {
   styleUrls: ['./food.component.scss'], // Add your styles if needed
 })
 export class FoodComponent implements OnInit {
+  constructor() {}
+  mealTitle = '';
   proteinTotal = 0; // Initialize the value
   vitaminB1Total = 0;
 
@@ -103,7 +105,25 @@ export class FoodComponent implements OnInit {
     );
     const pannedEggs = new Recipe('pannedEggs', [egg]);
     pannedEggs.calcNutritionalValues(Verarbeitungsschritte.kochen);
+    this.mealTitle = pannedEggs.name;
     this.proteinTotal = pannedEggs.nutrients[Nutrients.protein] || 0;
     this.vitaminB1Total = pannedEggs.nutrients[Nutrients.vitaminB1] || 0;
   }
+  displayedColumnsNutrion: string[] = ['Name', 'Protein', 'Vitamin B1'];
+  dataSourceNutrion = MOCK_DATA_nutri;
 }
+
+export interface NutritionalValues {
+  //Überarbeitungsbedarf: Hier müsste dich eigentlich was Array- oder Mapmäßiges hin???
+  name: string;
+  amountProtein: number;
+  amountVitaminB1: number;
+}
+
+export const MOCK_DATA_nutri: NutritionalValues[] = [
+  {
+    name: 'Kötbulla',
+    amountProtein: 1,
+    amountVitaminB1: 0.123,
+  },
+];

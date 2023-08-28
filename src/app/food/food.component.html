@@ -1,15 +1,28 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Foodcoach</title>
-  </head>
-  <body>
-    <ul>
-      <li>Protein: {{ proteinTotal }} gram</li>
-      <li>Vitamin B1: {{ vitaminB1Total }} gram</li>
-    </ul>
-    <button>
-      <a href="/home">Go back Home</a>
-    </button>
-  </body>
-</html>
+<title>Foodcoach</title>
+<div>{{ mealTitle }}</div>
+<mat-table [dataSource]="dataSourceNutrion">
+  <!-- Define columns using ng-container -->
+  <ng-container matColumnDef="Name">
+    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell *matCellDef="let nutrient">{{ nutrient.name }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Protein">
+    <mat-header-cell *matHeaderCellDef>Protein</mat-header-cell>
+    <mat-cell *matCellDef="let nutrient">{{ nutrient.amountProtein }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Vitamin B1">
+    <mat-header-cell *matHeaderCellDef>Vitamin B1</mat-header-cell>
+    <mat-cell *matCellDef="let nutrient">{{
+      nutrient.amountVitaminB1
+    }}</mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumnsNutrion"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumnsNutrion"></mat-row>
+</mat-table>
+<ul>
+  <li>Protein: {{ proteinTotal }} gram</li>
+  <li>Vitamin B1: {{ vitaminB1Total }} gram</li>
+</ul>
+<button>
+  <a href="/home">Go back Home</a>
+</button>

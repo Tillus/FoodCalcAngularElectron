@@ -7,9 +7,11 @@ import { PageNotFoundComponent } from './components/';
 import { WebviewDirective } from './directives/';
 import { FormsModule } from '@angular/forms';
 
+import { MatTableModule } from '@angular/material/table';
+
 @NgModule({
   declarations: [PageNotFoundComponent, WebviewDirective],
-  imports: [CommonModule, TranslateModule, FormsModule],
-  exports: [TranslateModule, WebviewDirective, FormsModule]
+  imports: [CommonModule, TranslateModule, FormsModule, MatTableModule],
+  exports: [TranslateModule, WebviewDirective, FormsModule, MatTableModule],
 })
 export class SharedModule {}
