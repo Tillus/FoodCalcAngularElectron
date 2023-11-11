@@ -3,14 +3,14 @@
   "compilerOptions": {
     "strict": true,
     "outDir": "./dist/out-tsc",
-    "module": "es2022",
+    "module": "CommonJS",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "target": "ES2022",
+    "target": "ES2015",
     "typeRoots": [
       "node_modules/@types"
     ],
