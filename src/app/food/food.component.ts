@@ -6,6 +6,11 @@ enum Nutrients {
   vitaminB1,
 }
 
+enum Columns {
+  nutrient = 'nutrient',
+  per100 = 'per100'
+}
+
 enum Verarbeitungsschritte {
   mischen = 1, //Quelle: Vitamin C bei https://www.zentrum-der-gesundheit.de/bibliothek/ratgeber/ernaehrungsratgeber/naehrstoffverluste  Vitamin B1 ( Thiamin), Vitamin B5 (Pantothensäure) und Vitamin C gehören
   kochen,
